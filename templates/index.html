@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>YouTube Transcription and Summarization</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mt-5">YouTube Transcription and Summarization</h1>
+      <form id="transcribe-form" method="post">
+        <div class="form-group">
+          <label for="video_url">YouTube Video URL</label>
+          <input type="text" class="form-control" id="video_url" name="video_url" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Transcribe and Summarize</button>
+      </form>
+      <div id="result" class="mt-4"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('#transcribe-form').on('submit', function(e){
+          e.preventDefault();
+          $.ajax({
+            url: '/transcribe',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response){
+              if (response.error) {
+                $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+              } else {
+                $('#result').html('<h2>Transcript:</h2><pre>' + response.transcript + '</pre><h2>Summary:</h2><pre>' + response.summary + '</pre>');
+              }
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
